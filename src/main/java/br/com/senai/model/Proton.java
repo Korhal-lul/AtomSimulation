@@ -13,7 +13,6 @@ public class Proton extends Particle {
     private float x, y;
     private float vx = 0;
     private float vy = 0;
-    private float spring;
     private float gravity;
     private float friction;
     private int id;
@@ -23,7 +22,7 @@ public class Proton extends Particle {
     private boolean hold = false;
     private boolean released = false;
 
-    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view, float spring, float gravity, float friction) {
+    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view, float gravity, float friction) {
         this.x = xin;
         this.y = yin;
         this.id = id;
@@ -33,11 +32,10 @@ public class Proton extends Particle {
         this.view = view;
     }
 
-    public void update(Particle[] particles, float gravity, float spring) {
+    public void update(Particle[] particles, float gravity) {
         this.others = particles;
         this.numBalls = particles.length;
         this.gravity = gravity;
-        this.spring = spring;
     }
 
     @Override
@@ -94,6 +92,7 @@ public class Proton extends Particle {
     }
 
     public void collide() {
+
         for (int i = id; i < numBalls; i++) {
             float otherTargetX = others[i].getX() + others[i].getVX();
             float otherTargetY = others[i].getY() + others[i].getVY();
@@ -105,26 +104,15 @@ public class Proton extends Particle {
                 float angle = atan2(dy, dx);
                 float targetX = x + cos(angle) * minDist;
                 float targetY = y + sin(angle) * minDist;
-                float ax = (targetX - others[i].getX()) * spring;
-                float ay = (targetY - others[i].getY()) * spring;
+                float ax = (targetX - others[i].getX());
+                float ay = (targetY - others[i].getY());
                 vx -= ax;
                 vy -= ay;
                 others[i].setVX(others[i].getVX() + ax);
                 others[i].setVY(others[i].getVY() + ay);
             }
         }
-    }
-
-    public void moveGravity() {
-        /*Unused for now
-        vy += gravity;
-        x += vx;
-        y += vy;
-
-        }*/
-    }
-
-    public void move() {
+        //MOVE
         if (x + radius > view.width) {
             x = view.width - radius;
             vx *= friction;
@@ -139,6 +127,19 @@ public class Proton extends Particle {
             y = radius;
             vy *= friction;
         }
+    }
+
+    public void moveGravity() {
+        /*Unused for now
+        vy += gravity;
+        x += vx;
+        y += vy;
+
+        }*/
+    }
+
+    public void move() {
+
     }
 
     public void display() {

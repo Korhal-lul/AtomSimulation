@@ -10,7 +10,7 @@ public abstract class Particle {
 
     public abstract void collide();
 
-    public abstract void update(Particle[] particles, float gravity, float spring);
+    public abstract void update(Particle[] particles, float gravity);
 
     public abstract void clicked(boolean is);
 
