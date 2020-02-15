@@ -8,10 +8,10 @@ import static processing.core.PApplet.*;
 
 public class Proton extends Particle {
 
-    private static final float radius = 8;
-
+    private static final float radius = 40;
+    private static final float speedControl = (float) 0.05;
+    private static final float maxSpeed = (float) 120; //Na BR201
     private float x, y;
-    private float spring;
     private float gravity;
     private float friction;
     private int id;
@@ -21,7 +21,7 @@ public class Proton extends Particle {
     private boolean hold = false;
     private boolean released = false;
 
-    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view, float spring, float gravity, float friction) {
+    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view, float gravity, float friction) {
         this.x = xin;
         this.y = yin;
         this.id = id;
@@ -29,13 +29,15 @@ public class Proton extends Particle {
         this.gravity = gravity;
         this.friction = friction;
         this.view = view;
+
+        this.vel = new PVector((float) Math.random() * maxSpeed * 2 - maxSpeed, (float) Math.random() * maxSpeed * 2 - maxSpeed);
+        System.out.println();
     }
 
-    public void update(Particle[] particles, float gravity, float spring) {
+    public void update(Particle[] particles, float gravity) {
         this.others = particles;
         this.numBalls = particles.length;
         this.gravity = gravity;
-        this.spring = spring;
     }
 
     @Override
@@ -62,6 +64,31 @@ public class Proton extends Particle {
     }
 
     @Override
+    public float getX() {
+        return x;
+    }
+
+    @Override
+    public float getY() {
+        return y;
+    }
+
+    @Override
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    @Override
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    @Override
+    public PVector getVel() {
+        return vel;
+    }
+
+    @Override
     public void inertia() {
         if (hold) return;
 
@@ -85,29 +112,45 @@ public class Proton extends Particle {
         System.out.println("pmouseX = " + view.pmouseX + " pmouseY = " + view.pmouseY);
         */
 
-        vx += ax;
-        vy += ay;
+        vel.add(ax, ay);
     }
 
     public void collide() {
-        for (int i = id; i < numBalls; i++) {
-            float otherTargetX = others[i].getX() + others[i].getVX();
-            float otherTargetY = others[i].getY() + others[i].getVY();
-            float dx = otherTargetX - x;
-            float dy = otherTargetY - y;
-            float distance = sqrt(dx * dx + dy * dy);
+        for (int i = id + 1; i < numBalls; i++) {
+            float otherTargetX = others[i].getX();
+            float otherTargetY = others[i].getY();
+
+            System.out.println(x + " " + y);
+            System.out.println(otherTargetX + " " + otherTargetY);
+
+            float distance = dist(x, y, otherTargetX, otherTargetY);
             float minDist = others[i].getRadius() + radius;
+
             if (distance < minDist) {
-                float angle = atan2(dy, dx);
-                float targetX = x + cos(angle) * minDist;
-                float targetY = y + sin(angle) * minDist;
-                float ax = (targetX - others[i].getX()) * spring;
-                float ay = (targetY - others[i].getY()) * spring;
-                vx -= ax;
-                vy -= ay;
-                others[i].setVX(others[i].getVX() + ax);
-                others[i].setVY(others[i].getVY() + ay);
+                System.out.println("Colision");
+                float angle = atan2(otherTargetY - y, otherTargetX - x);
+                PVector target = new PVector(x + cos(angle) * minDist, y + sin(angle) * minDist);
+                float ax = (target.x - others[i].getX() * speedControl);
+                float ay = (target.y - others[i].getY() * speedControl);
+                vel.sub(ax, ay);
+
+                others[i].setVel(others[i].getVel().add(ax, ay));
             }
+        }
+        //MOVE
+        if (x + radius > view.width) {
+            x = view.width - radius;
+            vel.x *= friction;
+        } else if (x - radius < 0) {
+            x = radius;
+            vel.x *= friction;
+        }
+        if (y + radius > view.height) {
+            y = view.height - radius;
+            vel.y *= friction;
+        } else if (y - radius < 0) {
+            y = radius;
+            vel.y *= friction;
         }
     }
 
@@ -120,21 +163,9 @@ public class Proton extends Particle {
         }*/
     }
 
+    @Override
     public void move() {
-        if (x + radius > view.width) {
-            x = view.width - radius;
-            vx *= friction;
-        } else if (x - radius < 0) {
-            x = radius;
-            vx *= friction;
-        }
-        if (y + radius > view.height) {
-            y = view.height - radius;
-            vy *= friction;
-        } else if (y - radius < 0) {
-            y = radius;
-            vy *= friction;
-        }
+
     }
 
     public void display() {
@@ -142,47 +173,6 @@ public class Proton extends Particle {
         y += vel.y;
         view.ellipseMode(RADIUS);
         view.ellipse(this.x, this.y, radius, radius);
-    }
-
-
-    @Override
-    public float getX() {
-        return x;
-    }
-
-    @Override
-    public float getY() {
-        return y;
-    }
-
-    @Override
-    public float getVX() {
-        return vx;
-    }
-
-    @Override
-    public float getVY() {
-        return vy;
-    }
-
-    @Override
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    @Override
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    @Override
-    public void setVX(float vx) {
-        this.vx = vx;
-    }
-
-    @Override
-    public void setVY(float vy) {
-        this.vy = vy;
     }
 
     @Override

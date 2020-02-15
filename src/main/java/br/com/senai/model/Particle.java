@@ -3,7 +3,7 @@ package br.com.senai.model;
 import processing.core.PVector;
 
 public abstract class Particle {
-    protected float x, y, radius;
+    protected float x, y;
     protected PVector vel = new PVector(0, 0);
     public int id;
 
@@ -13,7 +13,7 @@ public abstract class Particle {
 
     public abstract void collide();
 
-    public abstract void update(Particle[] particles, float gravity, float spring);
+    public abstract void update(Particle[] particles, float gravity);
 
     public abstract void clicked(boolean is);
 
@@ -29,13 +29,11 @@ public abstract class Particle {
 
     public abstract void setY(float y);
 
-    public abstract void setVX(float vx);
+    public abstract PVector getVel();
 
-    public abstract void setVY(float vy);
-
-    public abstract float getVX();
-
-    public abstract float getVY();
+    public void setVel(PVector vel) {
+        this.vel = vel;
+    }
 
     public abstract float getRadius();
 
