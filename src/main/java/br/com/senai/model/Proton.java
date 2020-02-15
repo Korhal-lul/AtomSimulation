@@ -73,19 +73,13 @@ public class Proton extends Particle {
         float magnitude = dir.mag();
 
         float angle = degrees(dir.heading());
-        int pmouseX =  view.pmouseX;
-        int pmouseY =  view.pmouseY;
+        int pmouseX = view.pmouseX;
+        int pmouseY = view.pmouseY;
 
-        if(pmouseX < x){
-            pmouseX*=-1;
-        }
-        if(pmouseY < y){
-            pmouseY*=-1;
-        }
         float targetX = pmouseX + cos(angle) * magnitude;
         float targetY = pmouseY + sin(angle) * magnitude;
-        float ax = (targetX - x) * spring;
-        float ay = (targetY - y) * spring;
+        float ax = (targetX - x);
+        float ay = (targetY - y);
         String info = "Degrees: " + (int) degrees(dir.heading()) + "\nMagnitude: " + (int) magnitude;
         System.out.println(info);
         System.out.println("ax = " + ax + " ay = " + ay + " Spring " + spring);
@@ -107,8 +101,10 @@ public class Proton extends Particle {
     public void collide() {
         for (int i = 0; i < numBalls; i++) {
             if (id == i) break;
-            float dx = others[i].getX() - x;
-            float dy = others[i].getY() - y;
+            float otherTargetX = others[i].getX() + others[i].getVX();
+            float otherTargetY = others[i].getY() + others[i].getVY();
+            float dx = otherTargetX - x;
+            float dy = otherTargetY - y;
             float distance = sqrt(dx * dx + dy * dy);
             float minDist = others[i].getDiameter() / 2 + diameter / 2;
             if (distance < minDist) {
