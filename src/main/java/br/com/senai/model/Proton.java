@@ -4,6 +4,8 @@ import br.com.senai.controller.Pressed;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 import static processing.core.PApplet.*;
 
 public class Proton extends Particle {
@@ -11,12 +13,12 @@ public class Proton extends Particle {
     private static final float speedControl = (float) 0.09;
     private static final float maxSpeed = (float) 120; //Na BR201
 
-    private Particle[] others;
+    private ArrayList<Particle> others;
     private PApplet view;
     private int numBalls;
     private boolean hold = false;
 
-    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view, float friction) {
+    public Proton(float xin, float yin, int id, ArrayList particles , PApplet view, float friction) {
         this.x = xin;
         this.y = yin;
         this.id = id;
@@ -27,9 +29,9 @@ public class Proton extends Particle {
         radius = 8;
     }
 
-    public void update(Particle[] particles) {
+    public void update(ArrayList particles) {
         this.others = particles;
-        this.numBalls = particles.length;
+        this.numBalls = particles.size();
     }
 
     @Override
@@ -88,22 +90,22 @@ public class Proton extends Particle {
     public void collide() {
 
         for (int i = id; i < numBalls; i++) {
-            float otherTargetX = others[i].getX() + others[i].getVX();
-            float otherTargetY = others[i].getY() + others[i].getVY();
+            float otherTargetX = others.get(i).getX() + others.get(i).getVX();
+            float otherTargetY = others.get(i).getY() + others.get(i).getVY();
             float dx = otherTargetX - x;
             float dy = otherTargetY - y;
             float distance = sqrt(dx * dx + dy * dy);
-            float minDist = others[i].getRadius() + radius;
+            float minDist = others.get(i).getRadius() + radius;
             if (distance < minDist) {
                 float angle = atan2(dy, dx);
                 float targetX = x + cos(angle) * minDist;
                 float targetY = y + sin(angle) * minDist;
-                float ax = (targetX - others[i].getX()) * speedControl;
-                float ay = (targetY - others[i].getY()) * speedControl;
+                float ax = (targetX - others.get(i).getX()) * speedControl;
+                float ay = (targetY - others.get(i).getY()) * speedControl;
                 vx -= ax;
                 vy -= ay;
-                others[i].setVX(others[i].getVX() + ax);
-                others[i].setVY(others[i].getVY() + ay);
+                others.get(i).setVX(others.get(i).getVX() + ax);
+                others.get(i).setVY(others.get(i).getVY() + ay);
             }
         }
         //MOVE

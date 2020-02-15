@@ -1,5 +1,7 @@
 package br.com.senai.model;
 
+import java.util.ArrayList;
+
 public abstract class Particle {
     protected float x, y, vx, vy, friction, radius;
     public static double mass;
@@ -11,7 +13,7 @@ public abstract class Particle {
 
     public abstract void collide();
 
-    public abstract void update(Particle[] particles);
+    public abstract void update(ArrayList<Particle> particles);
 
     public abstract void clicked(boolean is);
 
