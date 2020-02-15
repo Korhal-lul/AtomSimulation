@@ -13,7 +13,6 @@ import java.text.DecimalFormat;
 public class MainLoop extends PApplet {
 
     int numBalls = 10;
-    float spring = (float) 0.05;
     float gravity = 0;//(float) 0.01;
     float friction = (float) -0.15;
     double atomicMass = 0;
@@ -29,7 +28,7 @@ public class MainLoop extends PApplet {
 
         for (int i = 0; i < numBalls; i++) {
             particles[i] = new Proton(random(width), random(height - 120), i,
-                    particles, this, spring, gravity, friction);
+                    particles, this, gravity, friction);
         }
         noStroke();
         fill(255, 180);
@@ -41,7 +40,7 @@ public class MainLoop extends PApplet {
         atomicMass = 0;
         background(0);
         for (Particle particle : particles) {
-            particle.update(particles, gravity, spring);
+            particle.update(particles, gravity);
             particle.collide();
             particle.move();
             particle.display();
