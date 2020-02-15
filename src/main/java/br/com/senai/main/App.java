@@ -1,4 +1,4 @@
-package org.example;
+package br.com.senai.main;
 
 import br.com.senai.model.Particle;
 import br.com.senai.model.Proton;

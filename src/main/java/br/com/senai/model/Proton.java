@@ -1,8 +1,6 @@
 package br.com.senai.model;
 
 import br.com.senai.controller.Pressed;
-import com.sun.xml.internal.ws.wsdl.writer.document.Part;
-import org.example.App;
 import processing.core.PApplet;
 import processing.core.PVector;
 
