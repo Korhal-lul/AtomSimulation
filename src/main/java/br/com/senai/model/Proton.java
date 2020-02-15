@@ -7,8 +7,10 @@ import processing.core.PVector;
 import static processing.core.PApplet.*;
 
 public class Proton extends Particle {
+
+    private static final float radius = 8;
+
     private float x, y;
-    private float diameter;
     private float vx = 0;
     private float vy = 0;
     private float spring;
@@ -21,10 +23,9 @@ public class Proton extends Particle {
     private boolean hold = false;
     private boolean released = false;
 
-    public Proton(float xin, float yin, float din, int id, Particle[] particles, PApplet view, float spring, float gravity, float friction) {
+    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view, float spring, float gravity, float friction) {
         this.x = xin;
         this.y = yin;
-        this.diameter = din;
         this.id = id;
         this.others = particles;
         this.gravity = gravity;
@@ -33,7 +34,6 @@ public class Proton extends Particle {
     }
 
     public void update(Particle[] particles, float gravity, float spring) {
-
         this.others = particles;
         this.numBalls = particles.length;
         this.gravity = gravity;
@@ -42,8 +42,7 @@ public class Proton extends Particle {
 
     @Override
     public void clicked(boolean is) {
-
-        if (Pressed.pointCircle(view.mouseX, view.mouseY, x, y, diameter / 2)) {
+        if (Pressed.pointCircle(view.mouseX, view.mouseY, x, y, radius)) {
             hold = true;
         }
         if (!is) {
@@ -67,7 +66,6 @@ public class Proton extends Particle {
 
     @Override
     public void inertia() {
-
         if (hold) return;
 
         PVector dir = PVector.sub(new PVector(view.mouseX, view.mouseY), new PVector(view.pmouseX, view.pmouseY));
@@ -102,7 +100,7 @@ public class Proton extends Particle {
             float dx = otherTargetX - x;
             float dy = otherTargetY - y;
             float distance = sqrt(dx * dx + dy * dy);
-            float minDist = others[i].getDiameter() / 2 + diameter / 2;
+            float minDist = others[i].getRadius() + radius;
             if (distance < minDist) {
                 float angle = atan2(dy, dx);
                 float targetX = x + cos(angle) * minDist;
@@ -127,8 +125,6 @@ public class Proton extends Particle {
     }
 
     public void move() {
-        float radius = diameter / 2;
-
         if (x + radius > view.width) {
             x = view.width - radius;
             vx *= friction;
@@ -148,7 +144,8 @@ public class Proton extends Particle {
     public void display() {
         x += vx;
         y += vy;
-        view.ellipse(this.x, this.y, diameter, diameter);
+        view.ellipseMode(RADIUS);
+        view.ellipse(this.x, this.y, radius, radius);
     }
 
 
@@ -173,11 +170,6 @@ public class Proton extends Particle {
     }
 
     @Override
-    public float getDiameter() {
-        return diameter;
-    }
-
-    @Override
     public void setX(float x) {
         this.x = x;
     }
@@ -197,4 +189,8 @@ public class Proton extends Particle {
         this.vy = vy;
     }
 
+    @Override
+    public float getRadius() {
+        return radius;
+    }
 }
