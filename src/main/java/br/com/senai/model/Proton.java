@@ -131,6 +131,11 @@ public class Proton extends Particle {
         x += vx;
         y += vy;
         view.ellipseMode(RADIUS);
+        if(hold){
+            view.stroke(255);
+        }else {
+            view.noStroke();
+        }
         view.fill(255, 75, 75);
         view.ellipse(this.x, this.y, radius, radius);
     }
