@@ -9,7 +9,8 @@ import static processing.core.PApplet.*;
 public class Proton extends Particle {
 
     private static final float radius = 8;
-
+    private static final float speedControl = (float) 0.05;
+    private static final float maxSpeed = (float) 120; //Na BR201
     private float x, y;
     private float vx = 0;
     private float vy = 0;
@@ -104,8 +105,8 @@ public class Proton extends Particle {
                 float angle = atan2(dy, dx);
                 float targetX = x + cos(angle) * minDist;
                 float targetY = y + sin(angle) * minDist;
-                float ax = (targetX - others[i].getX());
-                float ay = (targetY - others[i].getY());
+                float ax = (targetX - others[i].getX() * speedControl);
+                float ay = (targetY - others[i].getY() * speedControl);
                 vx -= ax;
                 vy -= ay;
                 others[i].setVX(others[i].getVX() + ax);
