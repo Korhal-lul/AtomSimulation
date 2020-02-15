@@ -11,8 +11,6 @@ public class Proton extends Particle {
     private static final float radius = 8;
 
     private float x, y;
-    private float vx = 0;
-    private float vy = 0;
     private float spring;
     private float gravity;
     private float friction;
@@ -58,8 +56,7 @@ public class Proton extends Particle {
     @Override
     public boolean isHolden() {
         if (hold) {
-            vx = 0;
-            vy = 0;
+            vel = new PVector(0, 0);
         }
         return hold;
     }
@@ -67,46 +64,37 @@ public class Proton extends Particle {
     @Override
     public void inertia() {
         if (hold) return;
+
         PVector dir = PVector.sub(new PVector(view.mouseX, view.mouseY), new PVector(view.pmouseX, view.pmouseY));
+
         float magnitude = dir.mag();
 
         float angle = degrees(dir.heading());
-        int pmouseX =  view.pmouseX;
-        int pmouseY =  view.pmouseY;
+        int pmouseX = view.pmouseX;
+        int pmouseY = view.pmouseY;
 
-        if(pmouseX < x){
-            pmouseX*=-1;
-        }
-        if(pmouseY < y){
-            pmouseY*=-1;
-        }
         float targetX = pmouseX + cos(angle) * magnitude;
         float targetY = pmouseY + sin(angle) * magnitude;
-        float ax = (targetX - x) * spring;
-        float ay = (targetY - y) * spring;
+        float ax = (targetX - x);
+        float ay = (targetY - y);
+
+        /*Debug purposes
         String info = "Degrees: " + (int) degrees(dir.heading()) + "\nMagnitude: " + (int) magnitude;
         System.out.println(info);
         System.out.println("ax = " + ax + " ay = " + ay + " Spring " + spring);
         System.out.println("pmouseX = " + view.pmouseX + " pmouseY = " + view.pmouseY);
-        vx += ax;
-        vy += ay;
-
-        /*Work Later
-        if (hold) return;
-
-        PVector dir = PVector.sub(new PVector(view.mouseX, view.mouseY), new PVector(view.pmouseX, view.pmouseY));
-        float magnitude = dir.mag();
-        String info = "Degrees: " + (int) degrees(dir.heading()) + "\nMagnitude: " + (int) magnitude;
-        System.out.println(info);
         */
 
+        vx += ax;
+        vy += ay;
     }
 
     public void collide() {
-        for (int i = 0; i < numBalls; i++) {
-            if (id == i) break;
-            float dx = others[i].getX() - x;
-            float dy = others[i].getY() - y;
+        for (int i = id; i < numBalls; i++) {
+            float otherTargetX = others[i].getX() + others[i].getVX();
+            float otherTargetY = others[i].getY() + others[i].getVY();
+            float dx = otherTargetX - x;
+            float dy = otherTargetY - y;
             float distance = sqrt(dx * dx + dy * dy);
             float minDist = others[i].getRadius() + radius;
             if (distance < minDist) {
@@ -150,8 +138,8 @@ public class Proton extends Particle {
     }
 
     public void display() {
-        x += vx;
-        y += vy;
+        x += vel.x;
+        y += vel.y;
         view.ellipseMode(RADIUS);
         view.ellipse(this.x, this.y, radius, radius);
     }

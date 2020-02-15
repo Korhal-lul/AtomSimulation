@@ -1,7 +1,10 @@
 package br.com.senai.model;
 
+import processing.core.PVector;
+
 public abstract class Particle {
-    protected float x, y, radius, vx, vy;
+    protected float x, y, radius;
+    protected PVector vel = new PVector(0, 0);
     public int id;
 
     public abstract void move();
