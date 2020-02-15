@@ -11,7 +11,7 @@
 .mtj.tmp/
 
 # Package Files #
-# *.jar
+ *.jar
 *.war
 *.nar
 *.ear
@@ -27,3 +27,6 @@ hs_err_pid*
 *.iml
 *.kotlin_builtins
 *.kotlin_module
+
+# Default ignored files
+/workspace.xml
