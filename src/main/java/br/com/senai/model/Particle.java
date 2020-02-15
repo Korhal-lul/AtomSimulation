@@ -1,8 +1,8 @@
 package br.com.senai.model;
 
 public abstract class Particle {
-    protected float x, y, vx, vy, friction;
-    public static double mass, radius;
+    protected float x, y, vx, vy, friction, radius;
+    public static double mass;
     public int id;
 
     public abstract void move();
@@ -23,9 +23,7 @@ public abstract class Particle {
 
     public abstract float getY();
 
-    public abstract void setX(float x);
-
-    public abstract void setY(float y);
+    public abstract double getMass();
 
     public abstract void setVX(float vx);
 
