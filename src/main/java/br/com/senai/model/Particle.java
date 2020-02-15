@@ -1,9 +1,7 @@
 package br.com.senai.model;
 
-import processing.core.PVector;
-
 public abstract class Particle {
-    protected float x, y, diameter, vx, vy;
+    protected float x, y, radius, vx, vy;
     public int id;
 
     public abstract void move();
@@ -36,9 +34,9 @@ public abstract class Particle {
 
     public abstract float getVY();
 
-    public abstract float getDiameter();
-
-    public abstract void inertia();
+    public abstract float getRadius();
 
     public abstract void moveGravity();
+
+    public abstract void inertia();
 }
