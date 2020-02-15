@@ -48,7 +48,7 @@ public class MainLoop extends PApplet {
 
             if (particle instanceof Proton) {
                 nuclearChange++;
-                atomicMass += particle.mass;
+                atomicMass += particle.getMass();
             }
         }
 

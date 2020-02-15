@@ -23,7 +23,6 @@ public class Proton extends Particle {
         this.others = particles;
         this.friction = friction;
         this.view = view;
-
         mass = 1.00727647;
         radius = 8;
     }
@@ -148,6 +147,11 @@ public class Proton extends Particle {
     }
 
     @Override
+    public double getMass() {
+        return mass;
+    }
+
+    @Override
     public float getVX() {
         return vx;
     }
@@ -155,16 +159,6 @@ public class Proton extends Particle {
     @Override
     public float getVY() {
         return vy;
-    }
-
-    @Override
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    @Override
-    public void setY(float y) {
-        this.y = y;
     }
 
     @Override
