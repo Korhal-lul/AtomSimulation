@@ -96,8 +96,7 @@ public class Proton extends Particle {
     }
 
     public void collide() {
-        for (int i = 0; i < numBalls; i++) {
-            if (id == i) break;
+        for (int i = id; i < numBalls; i++) {
             float otherTargetX = others[i].getX() + others[i].getVX();
             float otherTargetY = others[i].getY() + others[i].getVY();
             float dx = otherTargetX - x;
