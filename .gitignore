@@ -24,6 +24,7 @@ hs_err_pid*
 
 # Idea config
 .idea
+*.iml
 *.kotlin_builtins
 *.kotlin_module
 
