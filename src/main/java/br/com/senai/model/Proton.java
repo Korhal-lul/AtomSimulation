@@ -8,35 +8,29 @@ import static processing.core.PApplet.*;
 
 public class Proton extends Particle {
 
-    private static final float radius = 8;
-    private static final float speedControl = (float) 0.05;
+    private static final float speedControl = (float) 0.09;
     private static final float maxSpeed = (float) 120; //Na BR201
-    private float x, y;
-    private float vx = 0;
-    private float vy = 0;
-    private float gravity;
-    private float friction;
-    private int id;
+
     private Particle[] others;
     private PApplet view;
     private int numBalls;
     private boolean hold = false;
-    private boolean released = false;
 
-    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view, float gravity, float friction) {
+    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view, float friction) {
         this.x = xin;
         this.y = yin;
         this.id = id;
         this.others = particles;
-        this.gravity = gravity;
         this.friction = friction;
         this.view = view;
+
+        mass = 1.00727647;
+        radius = 8;
     }
 
-    public void update(Particle[] particles, float gravity) {
+    public void update(Particle[] particles) {
         this.others = particles;
         this.numBalls = particles.length;
-        this.gravity = gravity;
     }
 
     @Override
@@ -105,8 +99,8 @@ public class Proton extends Particle {
                 float angle = atan2(dy, dx);
                 float targetX = x + cos(angle) * minDist;
                 float targetY = y + sin(angle) * minDist;
-                float ax = (targetX - others[i].getX() * speedControl);
-                float ay = (targetY - others[i].getY() * speedControl);
+                float ax = (targetX - others[i].getX()) * speedControl;
+                float ay = (targetY - others[i].getY()) * speedControl;
                 vx -= ax;
                 vy -= ay;
                 others[i].setVX(others[i].getVX() + ax);
@@ -130,15 +124,6 @@ public class Proton extends Particle {
         }
     }
 
-    public void moveGravity() {
-        /*Unused for now
-        vy += gravity;
-        x += vx;
-        y += vy;
-
-        }*/
-    }
-
     public void move() {
 
     }
@@ -147,6 +132,7 @@ public class Proton extends Particle {
         x += vx;
         y += vy;
         view.ellipseMode(RADIUS);
+        view.fill(255, 75, 75);
         view.ellipse(this.x, this.y, radius, radius);
     }
 

@@ -1,7 +1,8 @@
 package br.com.senai.model;
 
 public abstract class Particle {
-    protected float x, y, radius, vx, vy;
+    protected float x, y, vx, vy, friction;
+    public static double mass, radius;
     public int id;
 
     public abstract void move();
@@ -10,7 +11,7 @@ public abstract class Particle {
 
     public abstract void collide();
 
-    public abstract void update(Particle[] particles, float gravity);
+    public abstract void update(Particle[] particles);
 
     public abstract void clicked(boolean is);
 
@@ -35,8 +36,6 @@ public abstract class Particle {
     public abstract float getVY();
 
     public abstract float getRadius();
-
-    public abstract void moveGravity();
 
     public abstract void inertia();
 }

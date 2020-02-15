@@ -12,12 +12,11 @@ import java.text.DecimalFormat;
  */
 public class MainLoop extends PApplet {
 
-    int numBalls = 10;
-    float gravity = 0;//(float) 0.01;
-    float friction = (float) -0.15;
-    double atomicMass = 0;
-    float nuclearChange = 0;
-    Particle[] particles = new Particle[numBalls];
+    private int numBalls = 10;
+    private float friction = (float) -0.15;
+    private float nuclearChange = 0;
+    private double atomicMass = 0;
+    private Particle[] particles = new Particle[numBalls];
 
     public void settings() {
         size(1266, 720);
@@ -28,10 +27,9 @@ public class MainLoop extends PApplet {
 
         for (int i = 0; i < numBalls; i++) {
             particles[i] = new Proton(random(width), random(height - 120), i,
-                    particles, this, gravity, friction);
+                    particles, this, friction);
         }
         noStroke();
-        fill(255, 180);
 
     }
 
@@ -40,7 +38,7 @@ public class MainLoop extends PApplet {
         atomicMass = 0;
         background(0);
         for (Particle particle : particles) {
-            particle.update(particles, gravity);
+            particle.update(particles);
             particle.collide();
             particle.move();
             particle.display();
@@ -50,14 +48,16 @@ public class MainLoop extends PApplet {
 
             if (particle instanceof Proton) {
                 nuclearChange++;
-                atomicMass += 1.00727647;
+                atomicMass += particle.mass;
             }
         }
 
         DecimalFormat df = new DecimalFormat("#.#####");
 
+        fill(255, 180);
         textSize(32);
         text("Z = " + nuclearChange, 10, 30);
+        fill(255, 180);
         textSize(32);
         text("Mass = " + df.format(atomicMass), 10, 64);
     }
