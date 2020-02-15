@@ -69,7 +69,9 @@ public class Proton extends Particle {
     public void inertia() {
 
         if (hold) return;
+
         PVector dir = PVector.sub(new PVector(view.mouseX, view.mouseY), new PVector(view.pmouseX, view.pmouseY));
+
         float magnitude = dir.mag();
 
         float angle = degrees(dir.heading());
@@ -80,21 +82,16 @@ public class Proton extends Particle {
         float targetY = pmouseY + sin(angle) * magnitude;
         float ax = (targetX - x);
         float ay = (targetY - y);
+
+        /*Debug purposes
         String info = "Degrees: " + (int) degrees(dir.heading()) + "\nMagnitude: " + (int) magnitude;
         System.out.println(info);
         System.out.println("ax = " + ax + " ay = " + ay + " Spring " + spring);
         System.out.println("pmouseX = " + view.pmouseX + " pmouseY = " + view.pmouseY);
+        */
+
         vx += ax;
         vy += ay;
-
-        /*Work Later
-        if (hold) return;
-
-        PVector dir = PVector.sub(new PVector(view.mouseX, view.mouseY), new PVector(view.pmouseX, view.pmouseY));
-        float magnitude = dir.mag();
-        String info = "Degrees: " + (int) degrees(dir.heading()) + "\nMagnitude: " + (int) magnitude;
-        System.out.println(info);
-        */
 
     }
 
