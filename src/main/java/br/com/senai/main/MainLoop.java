@@ -8,12 +8,14 @@ import processing.core.PVector;
 /**
  * Hello world!
  */
-public class App extends PApplet {
+public class MainLoop extends PApplet {
 
-    int numBalls = 1;
+    int numBalls = 10;
     float spring = (float) 0.05;
     float gravity = 0;//(float) 0.01;
     float friction = (float) -0.9;
+    float atomicMass = 0;
+    float nuclearChange = 0;
     Particle[] particles = new Particle[numBalls];
 
     public void settings() {
@@ -22,18 +24,18 @@ public class App extends PApplet {
 
     public void setup() {
         frameRate(60);
+
         for (int i = 0; i < numBalls; i++) {
-            particles[i] = new Proton(random(width), random(height - 120), 50, i,
+            particles[i] = new Proton(random(width), random(height - 120), 8, i,
                     particles, this, spring, gravity, friction);
         }
         noStroke();
         fill(255, 180);
 
-        changeGravity();
     }
 
     public void draw() {
-
+        nuclearChange = 0;
         background(0);
         for (Particle particle : particles) {
             particle.update(particles, gravity, spring);
@@ -43,20 +45,14 @@ public class App extends PApplet {
             if (particle.isHolden()) {
                 particle.follow();
             }
-        }
-    }
 
-    public void changeGravity() {
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        gravity = gravity * -1;
-                        changeGravity();
-                    }
-                },
-                1000
-        );
+            if (particle instanceof Proton) {
+                nuclearChange++;
+            }
+        }
+
+        textSize(32);
+        text("Z = " + nuclearChange, 10, 30);
     }
 
     @Override
@@ -69,8 +65,10 @@ public class App extends PApplet {
     @Override
     public void mouseReleased() {
         for (Particle particle : particles) {
-            particle.clicked(false);
-            particle.inertia();
+            if (particle.isHolden()) {
+                particle.clicked(false);
+                particle.inertia();
+            }
         }
     }
 

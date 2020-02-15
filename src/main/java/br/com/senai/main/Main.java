@@ -4,7 +4,7 @@ import processing.core.PApplet;
 
 public class Main {
     public static void main(String[] args) {
-        App ml = new App();
+        MainLoop ml = new MainLoop();
         PApplet.runSketch(new String[]{"AtomSimulator"}, ml);
     }
 }
