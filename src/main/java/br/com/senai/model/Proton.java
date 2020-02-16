@@ -10,21 +10,22 @@ import static processing.core.PApplet.*;
 
 public class Proton extends Particle {
 
-    private static final float speedControl = (float) 0.09;
-    private static final float maxSpeed = (float) 120; //Na BR201
-
+    private static final float maxSpeed = (float) 2; //Na BR201
+    private float x, y;
+    private int id;
     private ArrayList<Particle> others;
     private PApplet view;
     private int numBalls;
     private boolean hold = false;
 
-    public Proton(float xin, float yin, int id, ArrayList particles , PApplet view, float friction) {
+    public Proton(float xin, float yin, int id, ArrayList particles, PApplet view) {
         this.x = xin;
         this.y = yin;
         this.id = id;
         this.others = particles;
-        this.friction = friction;
         this.view = view;
+
+        this.vel = new PVector((float) Math.random() * maxSpeed * 2 - maxSpeed, (float) Math.random() * maxSpeed * 2 - maxSpeed);
         mass = 1.00727647;
         radius = 8;
     }
@@ -52,10 +53,29 @@ public class Proton extends Particle {
     @Override
     public boolean isHolden() {
         if (hold) {
-            vx = 0;
-            vy = 0;
+            vel = new PVector(0, 0);
         }
         return hold;
+    }
+
+    @Override
+    public float getX() {
+        return x;
+    }
+
+    @Override
+    public float getY() {
+        return y;
+    }
+
+    @Override
+    public double getMass() {
+        return mass;
+    }
+
+    @Override
+    public PVector getVel() {
+        return vel;
     }
 
     @Override
@@ -82,100 +102,52 @@ public class Proton extends Particle {
         System.out.println("pmouseX = " + view.pmouseX + " pmouseY = " + view.pmouseY);
         */
 
-        vx += ax;
-        vy += ay;
-
+        vel.add(ax, ay);
     }
 
     public void collide() {
+        for (int i = id + 1; i < numBalls; i++) {
+            Particle other = others.get(i);
 
-        for (int i = id; i < numBalls; i++) {
-            float otherTargetX = others.get(i).getX() + others.get(i).getVX();
-            float otherTargetY = others.get(i).getY() + others.get(i).getVY();
-            float dx = otherTargetX - x;
-            float dy = otherTargetY - y;
-            float distance = sqrt(dx * dx + dy * dy);
-            float minDist = others.get(i).getRadius() + radius;
+            float targetX = other.getX();
+            float targetY = other.getY();
+            float distance = dist(x, y, targetX, targetY);
+            float minDist = other.getRadius() + radius;
+
             if (distance < minDist) {
-                float angle = atan2(dy, dx);
-                float targetX = x + cos(angle) * minDist;
-                float targetY = y + sin(angle) * minDist;
-                float ax = (targetX - others.get(i).getX()) * speedControl;
-                float ay = (targetY - others.get(i).getY()) * speedControl;
-                vx -= ax;
-                vy -= ay;
-                others.get(i).setVX(others.get(i).getVX() + ax);
-                others.get(i).setVY(others.get(i).getVY() + ay);
+                double f1 = mass * vel.mag();
+                double f2 = other.getMass() * other.getVel().mag();
+                float mag = max(maxSpeed, (float) ((f1 + f2) / (mass + other.getMass())));
+
+                PVector aux = vel;
+                vel = other.getVel().sub(vel);
+                vel.normalize().mult(mag);
+                other.setVel(aux.sub(other.getVel()));
+                other.vel.normalize().mult(mag);
             }
         }
-        //MOVE
-        if (x + radius > view.width) {
-            x = view.width - radius;
-            vx *= friction;
-        } else if (x - radius < 0) {
-            x = radius;
-            vx *= friction;
-        }
-        if (y + radius > view.height) {
-            y = view.height - radius;
-            vy *= friction;
-        } else if (y - radius < 0) {
-            y = radius;
-            vy *= friction;
-        }
+
+        //Wall colision
+        if (x + radius > view.width) vel.x *= -1;
+        else if (x - radius < 0) vel.x *= -1;
+        if (y + radius > view.height) vel.y *= -1;
+        else if (y - radius < 0) vel.y *= -1;
     }
 
+    @Override
     public void move() {
-
+        x += vel.x;
+        y += vel.y;
     }
 
     public void display() {
-        x += vx;
-        y += vy;
+        collide();
+        move();
         view.ellipseMode(RADIUS);
-        if(hold){
-            view.stroke(255);
-        }else {
-            view.noStroke();
-        }
+        if(hold) view.stroke(255);
+        else view.noStroke();
         view.fill(255, 75, 75);
         view.ellipse(this.x, this.y, radius, radius);
-    }
-
-
-    @Override
-    public float getX() {
-        return x;
-    }
-
-    @Override
-    public float getY() {
-        return y;
-    }
-
-    @Override
-    public double getMass() {
-        return mass;
-    }
-
-    @Override
-    public float getVX() {
-        return vx;
-    }
-
-    @Override
-    public float getVY() {
-        return vy;
-    }
-
-    @Override
-    public void setVX(float vx) {
-        this.vx = vx;
-    }
-
-    @Override
-    public void setVY(float vy) {
-        this.vy = vy;
     }
 
     @Override

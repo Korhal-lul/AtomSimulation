@@ -13,11 +13,10 @@ import java.util.ArrayList;
  */
 public class MainLoop extends PApplet {
 
-    private int numBalls = 10;
-    private float friction = (float) -0.15;
+    private int numBalls = 50;
     private float nuclearChange = 0;
     private double atomicMass = 0;
-    private ArrayList<Particle> particles = new ArrayList();
+    private ArrayList<Particle> particles = new ArrayList<>();
 
     public void settings() {
         size(1266, 720);
@@ -27,8 +26,7 @@ public class MainLoop extends PApplet {
         frameRate(60);
 
         for (int i = 0; i < numBalls; i++) {
-            particles.add(new Proton(random(width), random(height - 120), i,
-                    particles, this, friction));
+            particles.add(new Proton(random(width), random(height), i, particles, this));
         }
         noStroke();
 
@@ -40,8 +38,6 @@ public class MainLoop extends PApplet {
         background(0);
         for (Particle particle : particles) {
             particle.update(particles);
-            particle.collide();
-            particle.move();
             particle.display();
             if (particle.isHolden()) {
                 particle.follow();

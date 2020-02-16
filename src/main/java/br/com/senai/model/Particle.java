@@ -1,9 +1,11 @@
 package br.com.senai.model;
 
+import processing.core.PVector;
 import java.util.ArrayList;
 
 public abstract class Particle {
-    protected float x, y, vx, vy, friction, radius;
+    protected float x, y, friction, radius;
+    protected PVector vel = new PVector(0, 0);
     public static double mass;
     public int id;
 
@@ -27,13 +29,11 @@ public abstract class Particle {
 
     public abstract double getMass();
 
-    public abstract void setVX(float vx);
+    public abstract PVector getVel();
 
-    public abstract void setVY(float vy);
-
-    public abstract float getVX();
-
-    public abstract float getVY();
+    public void setVel(PVector vel) {
+        this.vel = vel;
+    }
 
     public abstract float getRadius();
 
