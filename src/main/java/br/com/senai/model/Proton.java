@@ -4,6 +4,8 @@ import br.com.senai.controller.Pressed;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 import static processing.core.PApplet.*;
 
 public class Proton extends Particle {
@@ -11,12 +13,12 @@ public class Proton extends Particle {
     private static final float maxSpeed = (float) 2; //Na BR201
     private float x, y;
     private int id;
-    private Particle[] others;
+    private ArrayList<Particle> others;
     private PApplet view;
     private int numBalls;
     private boolean hold = false;
 
-    public Proton(float xin, float yin, int id, Particle[] particles, PApplet view) {
+    public Proton(float xin, float yin, int id, ArrayList particles, PApplet view) {
         this.x = xin;
         this.y = yin;
         this.id = id;
@@ -28,9 +30,9 @@ public class Proton extends Particle {
         radius = 8;
     }
 
-    public void update(Particle[] particles) {
+    public void update(ArrayList particles) {
         this.others = particles;
-        this.numBalls = particles.length;
+        this.numBalls = particles.size();
     }
 
     @Override
@@ -105,22 +107,23 @@ public class Proton extends Particle {
 
     public void collide() {
         for (int i = id + 1; i < numBalls; i++) {
-            float targetX = others[i].getX();
-            float targetY = others[i].getY();
+            Particle other = others.get(i);
 
+            float targetX = other.getX();
+            float targetY = other.getY();
             float distance = dist(x, y, targetX, targetY);
-            float minDist = others[i].getRadius() + radius;
+            float minDist = other.getRadius() + radius;
 
             if (distance < minDist) {
                 double f1 = mass * vel.mag();
-                double f2 = others[i].getMass() * others[i].getVel().mag();
-                float mag = max(maxSpeed, (float) ((f1 + f2) / (mass + others[i].getMass())));
+                double f2 = other.getMass() * other.getVel().mag();
+                float mag = max(maxSpeed, (float) ((f1 + f2) / (mass + other.getMass())));
 
                 PVector aux = vel;
-                vel = others[i].getVel().sub(vel);
+                vel = other.getVel().sub(vel);
                 vel.normalize().mult(mag);
-                others[i].setVel(aux.sub(others[i].getVel()));
-                others[i].vel.normalize().mult(mag);
+                other.setVel(aux.sub(other.getVel()));
+                other.vel.normalize().mult(mag);
             }
         }
 
@@ -131,24 +134,18 @@ public class Proton extends Particle {
         else if (y - radius < 0) vel.y *= -1;
     }
 
-    public void moveGravity() {
-        /*Unused for now
-        vy += gravity;
-        x += vx;
-        y += vy;
-
-        }*/
-    }
-
     @Override
     public void move() {
-
+        x += vel.x;
+        y += vel.y;
     }
 
     public void display() {
-        x += vel.x;
-        y += vel.y;
+        collide();
+        move();
         view.ellipseMode(RADIUS);
+        if(hold) view.stroke(255);
+        else view.noStroke();
         view.fill(255, 75, 75);
         view.ellipse(this.x, this.y, radius, radius);
     }

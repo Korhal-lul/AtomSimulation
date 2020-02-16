@@ -1,6 +1,7 @@
 package br.com.senai.model;
 
 import processing.core.PVector;
+import java.util.ArrayList;
 
 public abstract class Particle {
     protected float x, y, friction, radius;
@@ -14,7 +15,7 @@ public abstract class Particle {
 
     public abstract void collide();
 
-    public abstract void update(Particle[] particles);
+    public abstract void update(ArrayList<Particle> particles);
 
     public abstract void clicked(boolean is);
 
