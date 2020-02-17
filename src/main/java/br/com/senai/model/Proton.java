@@ -59,14 +59,17 @@ public class Proton extends Particle {
     }
 
     public void follow() {
-        this.x = view.mouseX;
-        this.y = view.mouseY;
+        PVector mouse = new PVector(x - view.mouseX, y - view.mouseY);
+        mouse.normalize().mult(maxSpeed);
+        vel.sub(mouse);
+//        this.x = view.mouseX;
+//        this.y = view.mouseY;
     }
 
     @Override
     public boolean isHolden() {
         if (hold) {
-            vel = new PVector(0, 0);
+//            vel = new PVector(0, 0);
         }
         return hold;
     }

@@ -71,7 +71,7 @@ public class MainLoop extends PApplet {
         for (Particle particle : particles) {
             if (particle.isHolden()) {
                 particle.clicked(false);
-                particle.inertia();
+//                particle.inertia();
             }
         }
     }
