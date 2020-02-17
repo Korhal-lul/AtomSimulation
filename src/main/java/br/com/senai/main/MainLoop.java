@@ -26,7 +26,7 @@ public class MainLoop extends PApplet {
         frameRate(60);
 
         for (int i = 0; i < numBalls; i++) {
-            particles.add(new Proton(random(width), random(height), i, particles, this));
+            particles.add(new Proton(i, particles, this));
         }
         noStroke();
 
