@@ -19,15 +19,16 @@ public class Proton extends Particle {
     private boolean hold = false;
 
     public Proton(int id, ArrayList<Particle> particles, PApplet view) {
-        this.x = view.random(radius, view.width - radius);
-        this.y = view.random(radius, view.height - radius);
         this.id = id;
         this.others = particles;
         this.view = view;
 
-        this.vel = new PVector((float) Math.random() * maxSpeed * 2 - maxSpeed, (float) Math.random() * maxSpeed * 2 - maxSpeed);
+        this.vel = new PVector(view.random(-maxSpeed, maxSpeed), view.random(-maxSpeed, maxSpeed));
         mass = 1.00727647;
         radius = 8;
+
+        this.x = view.random(radius, view.width - radius);
+        this.y = view.random(radius, view.height - radius);
     }
 
     public Proton(float xin, float yin, int id, ArrayList<Particle> particles, PApplet view) {
@@ -37,7 +38,7 @@ public class Proton extends Particle {
         this.others = particles;
         this.view = view;
 
-        this.vel = new PVector((float) Math.random() * maxSpeed * 2 - maxSpeed, (float) Math.random() * maxSpeed * 2 - maxSpeed);
+        this.vel = new PVector(view.random(-maxSpeed, maxSpeed), view.random(-maxSpeed, maxSpeed));
         mass = 1.00727647;
         radius = 8;
     }
