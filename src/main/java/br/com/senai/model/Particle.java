@@ -1,6 +1,7 @@
 package br.com.senai.model;
 
 import processing.core.PVector;
+
 import java.util.ArrayList;
 
 public abstract class Particle {
@@ -9,6 +10,10 @@ public abstract class Particle {
     public static double mass;
     public int id;
 
+    public abstract void strongForce();
+
+    public abstract int getID();
+
     public abstract void move();
 
     public abstract void display();
@@ -16,6 +21,14 @@ public abstract class Particle {
     public abstract void collide();
 
     public abstract void update(ArrayList<Particle> particles);
+
+    public void setVel(PVector vel) {
+        this.vel = vel;
+    }
+
+    public abstract float getRadius();
+
+    public abstract void inertia();
 
     public abstract void clicked(boolean is);
 
@@ -30,12 +43,4 @@ public abstract class Particle {
     public abstract double getMass();
 
     public abstract PVector getVel();
-
-    public void setVel(PVector vel) {
-        this.vel = vel;
-    }
-
-    public abstract float getRadius();
-
-    public abstract void inertia();
 }

@@ -1,5 +1,6 @@
 package br.com.senai.main;
 
+import br.com.senai.view.MainLoop;
 import processing.core.PApplet;
 
 public class Main {

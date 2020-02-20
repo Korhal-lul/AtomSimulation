@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 import static processing.core.PApplet.*;
 
-public class Proton extends Particle {
+public class Neutron extends Particle {
 
-    private static final float maxSpeed = (float) 0.5; //Na BR201
+    private static final float maxSpeed = (float) 2; //Na BR201
     private float x, y;
     private int id;
     private ArrayList<Particle> others;
@@ -19,7 +19,7 @@ public class Proton extends Particle {
     private int numBalls;
     private boolean hold = false;
 
-    public Proton(float xin, float yin, int id, ArrayList<Particle> particles, PApplet view) {
+    public Neutron(float xin, float yin, int id, ArrayList<Particle> particles, PApplet view) {
         this.x = xin;
         this.y = yin;
         this.id = id;
@@ -27,8 +27,8 @@ public class Proton extends Particle {
         this.view = view;
 
         this.vel = new PVector((float) Math.random() * maxSpeed * 2 - maxSpeed, (float) Math.random() * maxSpeed * 2 - maxSpeed);
-        mass = 1.00727647;
-        radius = 8;
+        mass = 1.00866491588;
+        radius = (float) 9.5;
     }
 
     public void update(ArrayList<Particle> particles) {
@@ -47,7 +47,6 @@ public class Proton extends Particle {
     }
 
     public void follow() {
-
         this.x = view.mouseX;
         this.y = view.mouseY;
     }
@@ -108,7 +107,6 @@ public class Proton extends Particle {
     }
 
     public void collide() {
-
         for (int i = id + 1; i < numBalls; i++) {
             Particle other = others.get(i);
 
@@ -135,7 +133,6 @@ public class Proton extends Particle {
         else if (x - radius < 0) vel.x *= -1;
         if (y + radius > view.height) vel.y *= -1;
         else if (y - radius < 0) vel.y *= -1;
-
     }
 
     @Override
@@ -150,7 +147,6 @@ public class Proton extends Particle {
 
     @Override
     public void move() {
-        System.out.println(vel.x);
         x += vel.x;
         y += vel.y;
     }
@@ -159,9 +155,9 @@ public class Proton extends Particle {
         collide();
         move();
         view.ellipseMode(RADIUS);
-        if (hold) view.stroke(255);
+        if(hold) view.stroke(255);
         else view.noStroke();
-        view.fill(100, 100, 237);
+        view.fill(Color.lightGray.getRGB());
         view.ellipse(this.x, this.y, radius, radius);
     }
 
