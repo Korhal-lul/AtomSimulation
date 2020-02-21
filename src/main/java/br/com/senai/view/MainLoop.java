@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class MainLoop extends PApplet {
 
-    private int numBalls = 1;
+    private int numBalls = 1, id = 0;
     private int protons = 0, neutrons = 0, electrons = 0;
     private double atomicMass = 0;
     private ArrayList<Particle> particles = new ArrayList<>();
@@ -53,7 +53,7 @@ public class MainLoop extends PApplet {
             fill(250, 150);
             if (!(i == 0)) {
                 textSize(10);
-                text( "0," + i + " fm", 1, (i + 1) * step);
+                text("0," + i + " fm", 1, (i + 1) * step);
             }
 
             textSize(10);
@@ -85,7 +85,7 @@ public class MainLoop extends PApplet {
         btnProton.draw(width - 25, 60);
         btnElectron.draw(width - 25, 120);
         btnNeutron.draw(width - 25, 180);
-        btnPause.draw(width-90, height - 300);
+        btnPause.draw(width - 90, height - 300);
 
         atomicMass = 0;
         protons = 0;
@@ -115,26 +115,19 @@ public class MainLoop extends PApplet {
 
     @Override
     public void mousePressed() {
-        int id;
-        if (particles.size() == 0) {
-            id = 1;
-        } else {
-            id = particles.get(particles.size() - 1).getID() + 1;
-        }
-
-        if (btnPause.clicked()){
-
-            if(btnPause.isToggle()){
+        if (btnPause.clicked()) {
+            if (btnPause.isToggle()) {
                 btnPause.setImg(loadImage("./lib/images/pause.png"));
                 btnPause.setToggle(false);
                 Time.unpause(particles);
-            }else {
+            } else {
                 btnPause.setImg(loadImage("./lib/images/play.png"));
                 btnPause.setToggle(true);
                 Time.pause(particles);
             }
             return;
-        }else if (btnNeutron.clicked()) {
+        } else if (btnNeutron.clicked()) {
+            id++;
 
             Particle newNeutron = new Neutron(mouseX, mouseY, id, particles, this);
             newNeutron.clicked(true);
@@ -145,6 +138,7 @@ public class MainLoop extends PApplet {
 
             return;
         } else if (btnProton.clicked()) {
+            id++;
             Particle newProton = new Proton(mouseX, mouseY, id, particles, this);
             newProton.clicked(true);
             particles.add(newProton);
