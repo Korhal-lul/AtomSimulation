@@ -109,7 +109,10 @@ public class Proton extends Particle {
 
     public void collide() {
 
-        for (int i = id + 1; i < numBalls; i++) {
+        for (int i = 0; i < numBalls; i++) {
+
+            if(particles.get(i).getID() == id) break;
+
             Particle other = particles.get(i);
 
             float targetX = other.getX();
@@ -140,9 +143,12 @@ public class Proton extends Particle {
 
     @Override
     public void strongForce(boolean moving) {
-        if(!moving) return;
-        for (Particle particle : particles) {
-            /*Possible "gravity"*/
+        if (!moving) return;
+        for (int i = 0; i < particles.size(); i++) {
+            
+            if(particles.get(i).getID() == id) continue;
+
+            Particle particle = particles.get(i);
 
             float distance = dist(x, y, particle.getX(), particle.getY());
             if (!(distance <= 250) || hold) return;
@@ -150,8 +156,6 @@ public class Proton extends Particle {
             PVector dir = new PVector(x - particle.getX(), y - particle.getY());
             dir.normalize().mult(maxSpeed);
             this.vel.sub(dir);
-
-
         }
     }
 
