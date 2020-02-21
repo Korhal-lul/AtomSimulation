@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class MainLoop extends PApplet {
 
     private int numBalls = 1;
-    private float nuclearChange = 0;
+    private int protons = 0, neutrons = 0, electrons = 0;
     private double atomicMass = 0;
     private ArrayList<Particle> particles = new ArrayList<>();
     private Button btnProton;
@@ -30,46 +30,63 @@ public class MainLoop extends PApplet {
 
     public void setup() {
         frameRate(60);
+        surface.setResizable(true);
 
         for (int i = 0; i < numBalls; i++) {
             particles.add(new Proton(random(width - 100), random(height), i, particles, this));
         }
 
-        btnProton = new Button(1220, 60, 20, this, new Color(100, 100, 237));
-        btnElectron = new Button(1220, 120, 20, this, new Color(255, 70, 70));
-        btnNeutron = new Button(1220, 180, 20, this, Color.LIGHT_GRAY);
+        btnProton = new Button(20, this, new Color(100, 100, 237));
+        btnElectron = new Button(20, this, new Color(255, 70, 70));
+        btnNeutron = new Button(20, this, Color.LIGHT_GRAY);
     }
 
     public void draw() {
         background(0);
 
-        stroke(255, 255, 255, 100);
+        stroke(255, 255, 255, 60);
         int step = 50;
-        for (int i = 0; i < width / step + 1; i++) {
+        for (int i = 0; i < width / step; i++) {
+            fill(250, 150);
+            if (!(i == 0)) {
+                textSize(12);
+                text(i + " fm", 1, (i + 1) * step);
+            }
+
+            textSize(12);
+            text(i + " fm", i * step, 10);
+
+            //X line
             line(i * step, 0, i * step, height);
+            //Y line
             line(0, i * step, width, i * step);
         }
 
         DecimalFormat df = new DecimalFormat("#.#####");
 
-        fill(255, 180);
-        textSize(32);
-        text("Z = " + nuclearChange, 10, 30);
-        fill(255, 180);
-        textSize(32);
-        text("Mass = " + df.format(atomicMass) + " u", 10, 64);
-
         stroke(Color.WHITE.getRGB());
         fill(Color.BLACK.getRGB());
-        rect(1166, 0, 144, 700);
+        rect(width - 120, 0, 119, height - 1);
+
+        fill(250);
+        textSize(18);
+        text("Z = " + protons, width - 99, height - 60);
+        textSize(18);
+        text("Mass = " + df.format(atomicMass) + " u", 10, 46);
+        textSize(18);
+        text("P= " + protons, width - 99, 64);
+        textSize(18);
+        text("N= " + neutrons, width - 99, 184);
 
         noStroke();
-        btnProton.draw();
-        btnElectron.draw();
-        btnNeutron.draw();
+        btnProton.draw(width - 25, 60);
+        btnElectron.draw(width - 25, 120);
+        btnNeutron.draw(width - 25, 180);
 
-        nuclearChange = 0;
         atomicMass = 0;
+        protons = 0;
+        neutrons = 0;
+        electrons = 0;
         Particle removePart = null;
         for (Particle particle : particles) {
             particle.update(particles);
@@ -77,17 +94,19 @@ public class MainLoop extends PApplet {
             if (particle.isHolden()) {
                 particle.follow();
             }
-            if (!particle.isHolden() && particle.getX() >= 1170) {
+            if (!particle.isHolden() && particle.getX() >= width - 100) {
                 removePart = particle;
 
             }
             if (particle instanceof Proton) {
-                nuclearChange++;
+                protons++;
             }
-
+            if (particle instanceof Neutron) {
+                neutrons++;
+            }
             atomicMass += particle.getMass();
         }
-        if (particles != null)particles.remove(removePart);
+        if (particles != null) particles.remove(removePart);
     }
 
     @Override

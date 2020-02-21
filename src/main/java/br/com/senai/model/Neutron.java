@@ -11,7 +11,7 @@ import static processing.core.PApplet.*;
 
 public class Neutron extends Particle {
 
-    private static final float maxSpeed = (float) 2; //Na BR201
+    private static final float maxSpeed = (float) 12.5; //Na BR201
     private float x, y;
     private int id;
     private ArrayList<Particle> others;
@@ -87,7 +87,7 @@ public class Neutron extends Particle {
 
         float magnitude = dir.mag();
 
-        float angle = degrees(dir.heading());
+        float angle = dir.heading();
         int pmouseX = view.pmouseX;
         int pmouseY = view.pmouseY;
 
@@ -96,12 +96,12 @@ public class Neutron extends Particle {
         float ax = (targetX - x);
         float ay = (targetY - y);
 
-        /*Debug purposes
-        String info = "Degrees: " + (int) degrees(dir.heading()) + "\nMagnitude: " + (int) magnitude;
+        //Debug purposes
+        /*String info = "Radians: " + (int) dir.heading() + " Sin = " + sin(angle) + " Cos = " + cos(angle) + "\nMagnitude: " + (int) magnitude;
         System.out.println(info);
-        System.out.println("ax = " + ax + " ay = " + ay + " Spring " + spring);
+        System.out.println("ax = " + ax + " ay = " + ay);
         System.out.println("pmouseX = " + view.pmouseX + " pmouseY = " + view.pmouseY);
-        */
+        System.out.println("mouseX = " + view.mouseX + " mouseY = " + view.mouseY);*/
 
         vel.add(ax, ay);
     }

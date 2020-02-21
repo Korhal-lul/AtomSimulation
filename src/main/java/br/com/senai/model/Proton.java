@@ -4,17 +4,16 @@ import br.com.senai.controller.Pressed;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 import static processing.core.PApplet.*;
 
 public class Proton extends Particle {
 
-    private static final float maxSpeed = (float) 0.5; //Na BR201
+    private static final float maxSpeed = (float) 0.7; //Na BR201
     private float x, y;
     private int id;
-    private ArrayList<Particle> others;
+    private ArrayList<Particle> particles;
     private PApplet view;
     private int numBalls;
     private boolean hold = false;
@@ -23,7 +22,7 @@ public class Proton extends Particle {
         this.x = xin;
         this.y = yin;
         this.id = id;
-        this.others = particles;
+        this.particles = particles;
         this.view = view;
 
         this.vel = new PVector((float) Math.random() * maxSpeed * 2 - maxSpeed, (float) Math.random() * maxSpeed * 2 - maxSpeed);
@@ -32,13 +31,14 @@ public class Proton extends Particle {
     }
 
     public void update(ArrayList<Particle> particles) {
-        this.others = particles;
+        this.particles = particles;
         this.numBalls = particles.size();
     }
 
     @Override
     public void clicked(boolean is) {
         if (Pressed.pointCircle(view.mouseX, view.mouseY, x, y, radius)) {
+            vel = new PVector(0, 0);
             hold = true;
         }
         if (!is) {
@@ -48,6 +48,13 @@ public class Proton extends Particle {
 
     public void follow() {
 
+        /*Possible gravity
+        PVector mouse = new PVector(x - view.mouseX, y - view.mouseY);
+        mouse.normalize().mult(maxSpeed);
+        System.out.println("Mouse = " + mouse);
+        System.out.println("Vel = " + vel);
+        this.vel.sub(mouse);*/
+
         this.x = view.mouseX;
         this.y = view.mouseY;
     }
@@ -55,7 +62,7 @@ public class Proton extends Particle {
     @Override
     public boolean isHolden() {
         if (hold) {
-            vel = new PVector(0, 0);
+            // vel = new PVector(0, 0);
         }
         return hold;
     }
@@ -88,7 +95,7 @@ public class Proton extends Particle {
 
         float magnitude = dir.mag();
 
-        float angle = degrees(dir.heading());
+        float angle = dir.heading();
         int pmouseX = view.pmouseX;
         int pmouseY = view.pmouseY;
 
@@ -97,12 +104,13 @@ public class Proton extends Particle {
         float ax = (targetX - x);
         float ay = (targetY - y);
 
-        /*Debug purposes
-        String info = "Degrees: " + (int) degrees(dir.heading()) + "\nMagnitude: " + (int) magnitude;
+        //Debug purposes
+        /*String info = "Radians: " + (int) dir.heading() + " Sin = " + sin(angle) + " Cos = " + cos(angle) + "\nMagnitude: " + (int) magnitude;
         System.out.println(info);
-        System.out.println("ax = " + ax + " ay = " + ay + " Spring " + spring);
+        System.out.println("ax = " + ax + " ay = " + ay);
         System.out.println("pmouseX = " + view.pmouseX + " pmouseY = " + view.pmouseY);
-        */
+        System.out.println("mouseX = " + view.mouseX + " mouseY = " + view.mouseY);*/
+
 
         vel.add(ax, ay);
     }
@@ -110,7 +118,7 @@ public class Proton extends Particle {
     public void collide() {
 
         for (int i = id + 1; i < numBalls; i++) {
-            Particle other = others.get(i);
+            Particle other = particles.get(i);
 
             float targetX = other.getX();
             float targetY = other.getY();
@@ -140,7 +148,9 @@ public class Proton extends Particle {
 
     @Override
     public void strongForce() {
+        for (Particle particle : particles) {
 
+        }
     }
 
     @Override
@@ -150,7 +160,6 @@ public class Proton extends Particle {
 
     @Override
     public void move() {
-        System.out.println(vel.x);
         x += vel.x;
         y += vel.y;
     }
@@ -158,9 +167,12 @@ public class Proton extends Particle {
     public void display() {
         collide();
         move();
+        strongForce();
         view.ellipseMode(RADIUS);
+
         if (hold) view.stroke(255);
         else view.noStroke();
+
         view.fill(100, 100, 237);
         view.ellipse(this.x, this.y, radius, radius);
     }
