@@ -47,14 +47,6 @@ public class Proton extends Particle {
     }
 
     public void follow() {
-
-        /*Possible gravity
-        PVector mouse = new PVector(x - view.mouseX, y - view.mouseY);
-        mouse.normalize().mult(maxSpeed);
-        System.out.println("Mouse = " + mouse);
-        System.out.println("Vel = " + vel);
-        this.vel.sub(mouse);*/
-
         this.x = view.mouseX;
         this.y = view.mouseY;
     }
@@ -147,8 +139,18 @@ public class Proton extends Particle {
     }
 
     @Override
-    public void strongForce() {
+    public void strongForce(boolean moving) {
+        if(!moving) return;
         for (Particle particle : particles) {
+            /*Possible "gravity"*/
+
+            float distance = dist(x, y, particle.getX(), particle.getY());
+            if (!(distance <= 250) || hold) return;
+
+            PVector dir = new PVector(x - particle.getX(), y - particle.getY());
+            dir.normalize().mult(maxSpeed);
+            this.vel.sub(dir);
+
 
         }
     }
@@ -167,7 +169,6 @@ public class Proton extends Particle {
     public void display() {
         collide();
         move();
-        strongForce();
         view.ellipseMode(RADIUS);
 
         if (hold) view.stroke(255);

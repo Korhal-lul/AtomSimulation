@@ -135,9 +135,8 @@ public class Neutron extends Particle {
         else if (y - radius < 0) vel.y *= -1;
     }
 
-    @Override
-    public void strongForce() {
-
+    public void strongForce(boolean moving) {
+        if (!moving) return;
     }
 
     @Override
@@ -155,7 +154,7 @@ public class Neutron extends Particle {
         collide();
         move();
         view.ellipseMode(RADIUS);
-        if(hold) view.stroke(255);
+        if (hold) view.stroke(255);
         else view.noStroke();
         view.fill(Color.lightGray.getRGB());
         view.ellipse(this.x, this.y, radius, radius);

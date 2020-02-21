@@ -1,5 +1,6 @@
 package br.com.senai.view;
 
+import br.com.senai.controller.Time;
 import br.com.senai.model.Button;
 import br.com.senai.model.Neutron;
 import br.com.senai.model.Particle;
@@ -23,6 +24,7 @@ public class MainLoop extends PApplet {
     private Button btnProton;
     private Button btnElectron;
     private Button btnNeutron;
+    private Button btnPause;
 
     public void settings() {
         size(1266, 700);
@@ -39,6 +41,7 @@ public class MainLoop extends PApplet {
         btnProton = new Button(20, this, new Color(100, 100, 237));
         btnElectron = new Button(20, this, new Color(255, 70, 70));
         btnNeutron = new Button(20, this, Color.LIGHT_GRAY);
+        btnPause = new Button(70, 70, this, loadImage("./lib/images/pause.png"));
     }
 
     public void draw() {
@@ -49,12 +52,12 @@ public class MainLoop extends PApplet {
         for (int i = 0; i < width / step; i++) {
             fill(250, 150);
             if (!(i == 0)) {
-                textSize(12);
-                text(i + " fm", 1, (i + 1) * step);
+                textSize(10);
+                text( "0," + i + " fm", 1, (i + 1) * step);
             }
 
-            textSize(12);
-            text(i + " fm", i * step, 10);
+            textSize(10);
+            text("0," + i + " fm", i * step, 10);
 
             //X line
             line(i * step, 0, i * step, height);
@@ -82,6 +85,7 @@ public class MainLoop extends PApplet {
         btnProton.draw(width - 25, 60);
         btnElectron.draw(width - 25, 120);
         btnNeutron.draw(width - 25, 180);
+        btnPause.draw(width-90, height - 300);
 
         atomicMass = 0;
         protons = 0;
@@ -90,13 +94,13 @@ public class MainLoop extends PApplet {
         Particle removePart = null;
         for (Particle particle : particles) {
             particle.update(particles);
+            particle.strongForce(!btnPause.isToggle());
             particle.display();
             if (particle.isHolden()) {
                 particle.follow();
             }
             if (!particle.isHolden() && particle.getX() >= width - 100) {
                 removePart = particle;
-
             }
             if (particle instanceof Proton) {
                 protons++;
@@ -117,7 +121,20 @@ public class MainLoop extends PApplet {
         } else {
             id = particles.get(particles.size() - 1).getID() + 1;
         }
-        if (btnNeutron.clicked()) {
+
+        if (btnPause.clicked()){
+
+            if(btnPause.isToggle()){
+                btnPause.setImg(loadImage("./lib/images/pause.png"));
+                btnPause.setToggle(false);
+                Time.unpause(particles);
+            }else {
+                btnPause.setImg(loadImage("./lib/images/play.png"));
+                btnPause.setToggle(true);
+                Time.pause(particles);
+            }
+            return;
+        }else if (btnNeutron.clicked()) {
 
             Particle newNeutron = new Neutron(mouseX, mouseY, id, particles, this);
             newNeutron.clicked(true);

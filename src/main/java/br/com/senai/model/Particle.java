@@ -10,13 +10,13 @@ public abstract class Particle {
     public static double mass;
     public int id;
 
-    public abstract void strongForce();
-
     public abstract int getID();
 
     public abstract void move();
 
     public abstract void display();
+
+    public abstract void strongForce(boolean moving);
 
     public abstract void collide();
 

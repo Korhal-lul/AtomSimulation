@@ -16,4 +16,11 @@ public class Pressed {
         // radius the point is inside!
         return distance <= radius;
     }
+
+    public static boolean pointRect(float mouseX, float mouseY, float x, float y, float width, float height){
+
+        return mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height;
+
+    }
+
 }
