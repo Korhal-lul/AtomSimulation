@@ -10,21 +10,16 @@ public abstract class Particle {
     public static double mass;
     public int id;
 
-    public abstract int getID();
 
-    public abstract void move();
+    public abstract void move(boolean moving);
 
-    public abstract void display();
+    public abstract void display(boolean moving);
 
     public abstract void strongForce(boolean moving);
 
     public abstract void collide();
 
     public abstract void update(ArrayList<Particle> particles);
-
-    public void setVel(PVector vel) {
-        this.vel = vel;
-    }
 
     public abstract float getRadius();
 
@@ -43,4 +38,10 @@ public abstract class Particle {
     public abstract double getMass();
 
     public abstract PVector getVel();
+
+    public void setVel(PVector vel) {
+        this.vel = vel;
+    }
+
+    public abstract int getID();
 }

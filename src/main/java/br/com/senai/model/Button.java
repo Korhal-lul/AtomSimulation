@@ -1,9 +1,7 @@
 package br.com.senai.model;
 
 import br.com.senai.controller.Pressed;
-import br.com.senai.controller.Time;
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.core.PImage;
 
 import java.awt.*;

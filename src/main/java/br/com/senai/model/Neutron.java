@@ -14,7 +14,7 @@ public class Neutron extends Particle {
     private static final float maxSpeed = (float) 12.5; //Na BR201
     private float x, y;
     private int id;
-    private ArrayList<Particle> others;
+    private ArrayList<Particle> particles;
     private PApplet view;
     private int numBalls;
     private boolean hold = false;
@@ -23,7 +23,7 @@ public class Neutron extends Particle {
         this.x = xin;
         this.y = yin;
         this.id = id;
-        this.others = particles;
+        this.particles = particles;
         this.view = view;
 
         this.vel = new PVector((float) Math.random() * maxSpeed * 2 - maxSpeed, (float) Math.random() * maxSpeed * 2 - maxSpeed);
@@ -32,7 +32,7 @@ public class Neutron extends Particle {
     }
 
     public void update(ArrayList<Particle> particles) {
-        this.others = particles;
+        this.particles = particles;
         this.numBalls = particles.size();
     }
 
@@ -107,8 +107,11 @@ public class Neutron extends Particle {
     }
 
     public void collide() {
-        for (int i = id + 1; i < numBalls; i++) {
-            Particle other = others.get(i);
+        for (int i = 0; i < numBalls; i++) {
+
+            if(particles.get(i).getID() == id) continue;
+
+            Particle other = particles.get(i);
 
             float targetX = other.getX();
             float targetY = other.getY();
@@ -135,8 +138,9 @@ public class Neutron extends Particle {
         else if (y - radius < 0) vel.y *= -1;
     }
 
+    @Override
     public void strongForce(boolean moving) {
-        if (!moving) return;
+        if (!moving)return;
     }
 
     @Override
@@ -145,14 +149,18 @@ public class Neutron extends Particle {
     }
 
     @Override
-    public void move() {
+    public void move(boolean moving) {
+
+        if (!moving)return;
+
         x += vel.x;
         y += vel.y;
     }
 
-    public void display() {
+    @Override
+    public void display(boolean moving) {
         collide();
-        move();
+        move(moving);
         view.ellipseMode(RADIUS);
         if (hold) view.stroke(255);
         else view.noStroke();

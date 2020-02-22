@@ -1,12 +1,10 @@
 package br.com.senai.view;
 
-import br.com.senai.controller.Time;
 import br.com.senai.model.Button;
 import br.com.senai.model.Neutron;
 import br.com.senai.model.Particle;
 import br.com.senai.model.Proton;
 import processing.core.PApplet;
-import processing.core.PVector;
 
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -95,7 +93,7 @@ public class MainLoop extends PApplet {
         for (Particle particle : particles) {
             particle.update(particles);
             particle.strongForce(!btnPause.isToggle());
-            particle.display();
+            particle.display(!btnPause.isToggle());
             if (particle.isHolden()) {
                 particle.follow();
             }
@@ -119,11 +117,9 @@ public class MainLoop extends PApplet {
             if (btnPause.isToggle()) {
                 btnPause.setImg(loadImage("./lib/images/pause.png"));
                 btnPause.setToggle(false);
-                Time.unpause(particles);
             } else {
                 btnPause.setImg(loadImage("./lib/images/play.png"));
                 btnPause.setToggle(true);
-                Time.pause(particles);
             }
             return;
         } else if (btnNeutron.clicked()) {

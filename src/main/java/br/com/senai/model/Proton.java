@@ -46,37 +46,10 @@ public class Proton extends Particle {
         }
     }
 
+    @Override
     public void follow() {
         this.x = view.mouseX;
         this.y = view.mouseY;
-    }
-
-    @Override
-    public boolean isHolden() {
-        if (hold) {
-            // vel = new PVector(0, 0);
-        }
-        return hold;
-    }
-
-    @Override
-    public float getX() {
-        return x;
-    }
-
-    @Override
-    public float getY() {
-        return y;
-    }
-
-    @Override
-    public double getMass() {
-        return mass;
-    }
-
-    @Override
-    public PVector getVel() {
-        return vel;
     }
 
     @Override
@@ -111,7 +84,7 @@ public class Proton extends Particle {
 
         for (int i = 0; i < numBalls; i++) {
 
-            if(particles.get(i).getID() == id) break;
+            if(particles.get(i).getID() == id) continue;
 
             Particle other = particles.get(i);
 
@@ -143,9 +116,10 @@ public class Proton extends Particle {
 
     @Override
     public void strongForce(boolean moving) {
-        if (!moving) return;
+        if (!moving)return;
+
         for (int i = 0; i < particles.size(); i++) {
-            
+
             if(particles.get(i).getID() == id) continue;
 
             Particle particle = particles.get(i);
@@ -165,14 +139,18 @@ public class Proton extends Particle {
     }
 
     @Override
-    public void move() {
+    public void move(boolean moving) {
+
+        if(!moving)return;
+
         x += vel.x;
         y += vel.y;
     }
 
-    public void display() {
+    @Override
+    public void display(boolean moving) {
         collide();
-        move();
+        move(moving);
         view.ellipseMode(RADIUS);
 
         if (hold) view.stroke(255);
@@ -186,4 +164,31 @@ public class Proton extends Particle {
     public float getRadius() {
         return radius;
     }
+
+
+    @Override
+    public boolean isHolden() {
+        return hold;
+    }
+
+    @Override
+    public float getX() {
+        return x;
+    }
+
+    @Override
+    public float getY() {
+        return y;
+    }
+
+    @Override
+    public double getMass() {
+        return mass;
+    }
+
+    @Override
+    public PVector getVel() {
+        return vel;
+    }
+
 }
