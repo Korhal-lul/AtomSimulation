@@ -94,6 +94,16 @@ public class Proton extends Particle {
             float minDist = other.getRadius() + radius;
 
             if (distance < minDist) {
+
+                float angle = atan2(targetY - y, targetX - x);
+                PVector target = new PVector(x + cos(angle) * minDist, y + sin(angle) * minDist);
+                float ax = (target.x - other.getX());
+                float ay = (target.y - other.getY());
+                vel.sub(ax, ay);
+
+                other.setVel(other.getVel().add(ax, ay));
+
+                /*
                 double f1 = mass * vel.mag();
                 double f2 = other.getMass() * other.getVel().mag();
                 float mag = max(maxSpeed, (float) ((f1 + f2) / (mass + other.getMass())));
@@ -102,7 +112,7 @@ public class Proton extends Particle {
                 vel = other.getVel().sub(vel);
                 vel.normalize().mult(mag);
                 other.setVel(aux.sub(other.getVel()));
-                other.vel.normalize().mult(mag);
+                other.vel.normalize().mult(mag);*/
             }
         }
 
@@ -125,7 +135,7 @@ public class Proton extends Particle {
             Particle particle = particles.get(i);
 
             float distance = dist(x, y, particle.getX(), particle.getY());
-            if (!(distance <= 250) || hold) return;
+            if (!(distance <= 250) || hold) continue;
 
             PVector dir = new PVector(x - particle.getX(), y - particle.getY());
             dir.normalize().mult(maxSpeed);
