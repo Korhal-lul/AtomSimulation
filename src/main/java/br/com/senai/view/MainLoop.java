@@ -90,7 +90,11 @@ public class MainLoop extends PApplet {
         neutrons = 0;
         electrons = 0;
         Particle removePart = null;
-        for (Particle particle : particles) {
+        for (int i = 0; i < particles.size(); i++) {
+
+            Particle particle = particles.get(i);
+
+            particle.setId(i);
             particle.update(particles);
             particle.strongForce(!btnPause.isToggle());
             particle.display(!btnPause.isToggle());
@@ -123,8 +127,6 @@ public class MainLoop extends PApplet {
             }
             return;
         } else if (btnNeutron.clicked()) {
-            id++;
-
             Particle newNeutron = new Neutron(mouseX, mouseY, id, particles, this);
             newNeutron.clicked(true);
             particles.add(newNeutron);
@@ -134,7 +136,6 @@ public class MainLoop extends PApplet {
 
             return;
         } else if (btnProton.clicked()) {
-            id++;
             Particle newProton = new Proton(mouseX, mouseY, id, particles, this);
             newProton.clicked(true);
             particles.add(newProton);

@@ -82,9 +82,7 @@ public class Proton extends Particle {
 
     public void collide() {
 
-        for (int i = 0; i < numBalls; i++) {
-
-            if(particles.get(i).getID() == id) continue;
+        for (int i = id; i < numBalls; i++) {
 
             Particle other = particles.get(i);
 
@@ -97,8 +95,8 @@ public class Proton extends Particle {
 
                 float angle = atan2(targetY - y, targetX - x);
                 PVector target = new PVector(x + cos(angle) * minDist, y + sin(angle) * minDist);
-                float ax = (target.x - other.getX());
-                float ay = (target.y - other.getY());
+                float ax = (float) ((target.x - other.getX()));
+                float ay = (float) ((target.y - other.getY()));
                 vel.sub(ax, ay);
 
                 other.setVel(other.getVel().add(ax, ay));
@@ -126,19 +124,21 @@ public class Proton extends Particle {
 
     @Override
     public void strongForce(boolean moving) {
-        if (!moving)return;
+        if (!moving) return;
 
         for (int i = 0; i < particles.size(); i++) {
 
-            if(particles.get(i).getID() == id) continue;
-
             Particle particle = particles.get(i);
+            if (particle.getID() == id) continue;
 
             float distance = dist(x, y, particle.getX(), particle.getY());
-            if (!(distance <= 250) || hold) continue;
+
+            float force = (float) ((particles.get(i).getMass() * mass) / pow(distance, 2));
+
+            force = force * 437;
 
             PVector dir = new PVector(x - particle.getX(), y - particle.getY());
-            dir.normalize().mult(maxSpeed);
+            dir.normalize().mult(force);
             this.vel.sub(dir);
         }
     }
@@ -151,7 +151,7 @@ public class Proton extends Particle {
     @Override
     public void move(boolean moving) {
 
-        if(!moving)return;
+        if (!moving) return;
 
         x += vel.x;
         y += vel.y;
@@ -168,6 +168,15 @@ public class Proton extends Particle {
 
         view.fill(100, 100, 237);
         view.ellipse(this.x, this.y, radius, radius);
+
+        if (hold) {
+
+            //PVector target = new PVector(x + cos(angle), y + sin(angle) * minDist);
+            view.line(view.width / 2, view.height / 2, x, view.height / 2);
+
+            view.line(view.width / 2, view.height / 2, view.width / 2, y);
+
+        }
     }
 
     @Override
@@ -201,4 +210,8 @@ public class Proton extends Particle {
         return vel;
     }
 
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
 }

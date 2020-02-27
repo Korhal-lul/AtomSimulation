@@ -149,6 +149,11 @@ public class Neutron extends Particle {
     }
 
     @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
     public void move(boolean moving) {
 
         if (!moving)return;
