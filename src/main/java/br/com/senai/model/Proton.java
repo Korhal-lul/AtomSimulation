@@ -82,28 +82,61 @@ public class Proton extends Particle {
 
     public void collide() {
 
-        for (int i = id; i < numBalls; i++) {
+        for (int i = id + 1; i < numBalls; i++) {
 
             Particle other = particles.get(i);
 
-            float targetX = other.getX();
-            float targetY = other.getY();
-            float distance = dist(x, y, targetX, targetY);
+            float targetX = other.getX() + other.radius;
+            float targetY = other.getY() + other.radius;
+            float distance = dist(x + radius, y + radius, targetX, targetY);
             float minDist = other.getRadius() + radius;
 
             if (distance < minDist) {
 
-                float angle = atan2(targetY - y, targetX - x);
+                /*float angle = atan2(targetY - y, targetX - x);
                 PVector target = new PVector(x + cos(angle) * minDist, y + sin(angle) * minDist);
                 float ax = (float) ((target.x - other.getX()));
                 float ay = (float) ((target.y - other.getY()));
                 vel.sub(ax, ay);
 
-                other.setVel(other.getVel().add(ax, ay));
+                other.setVel(other.getVel().add(ax, ay));*/
 
+                float atrito = (float) 1; //Just to not create a forever loop
+                float angle1 = atan2(vel.y, vel.x);
+                float angle2 = atan2(other.getVel().y, other.getVel().x);
+                float contactAng = atan2(other.getVel().y - vel.y, other.getVel().x - vel.x);
+
+                double v1x = (vel.mag() * cos(angle1 - contactAng) * (mass - other.getMass())
+                        + (2 * other.getMass()) * other.getVel().mag() * cos(angle2 - contactAng)) / (mass + other.getMass())
+                        * cos(contactAng) + vel.mag() * sin(angle1 - contactAng) * cos(contactAng + (PI / 2));
+                double v1y = (vel.mag() * cos(angle1 - contactAng) * (mass - other.getMass())
+                        + (2 * other.getMass()) * other.getVel().mag() * cos(angle2 - contactAng)) / (mass + other.getMass())
+                        * sin(contactAng) + vel.mag() * sin(angle1 - contactAng) * sin(contactAng + (PI / 2));
+                double v2x = (other.getVel().mag() * cos(angle2 - contactAng) * (other.getMass() - mass)
+                        + (2 * mass) * vel.mag() * cos(angle1 - contactAng)) / (other.getMass() + mass)
+                        * cos(contactAng) + other.getVel().mag() * sin(angle2 - contactAng) * cos(contactAng + (PI / 2));
+                double v2y = (other.getVel().mag() * cos(angle2 - contactAng) * (other.getMass() - mass)
+                        + (2 * mass) * vel.mag() * cos(angle1 - contactAng)) / (other.getMass() + mass)
+                        * sin(contactAng) + other.getVel().mag() * sin(angle2 - contactAng) * sin(contactAng + (PI / 2));
+
+                vel.x = 0;
+                vel.y = 0;
+                other.y = 0;
+                other.x = 0;
+
+                vel.x = (float) v1x * atrito;
+
+                System.out.println(v1x + "   " + atrito);
+
+                vel.y = (float) v1y * atrito;
+
+                other.getVel().x = (float) v2x * atrito;
+
+                other.getVel().y = (float) v2y * atrito;
                 /*
                 double f1 = mass * vel.mag();
                 double f2 = other.getMass() * other.getVel().mag();
+
                 float mag = max(maxSpeed, (float) ((f1 + f2) / (mass + other.getMass())));
 
                 PVector aux = vel;
@@ -133,12 +166,12 @@ public class Proton extends Particle {
 
             float distance = dist(x, y, particle.getX(), particle.getY());
 
-            float force = (float) ((particles.get(i).getMass() * mass) / pow(distance, 2));
+            double force = ((particles.get(i).getMass() * mass) / pow(distance, 2));
 
-            force = force * 437;
+            force = force * 2;
 
             PVector dir = new PVector(x - particle.getX(), y - particle.getY());
-            dir.normalize().mult(force);
+            dir.normalize().mult((float) force);
             this.vel.sub(dir);
         }
     }
@@ -176,6 +209,13 @@ public class Proton extends Particle {
 
             view.line(view.width / 2, view.height / 2, view.width / 2, y);
 
+            view.stroke(200, 150);
+
+            view.line(x, y, x, view.height / 2);
+
+            view.line(x, y, view.width / 2, y);
+
+            view.noStroke();
         }
     }
 
