@@ -17,8 +17,6 @@ public abstract class Particle {
 
     public abstract void strongForce(boolean moving);
 
-    public abstract void collide();
-
     public abstract void update(ArrayList<Particle> particles);
 
     public abstract float getRadius();
