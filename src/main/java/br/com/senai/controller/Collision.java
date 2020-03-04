@@ -32,18 +32,10 @@ public class Collision {
 
             if (distance < minDist) {
 
-                /*float angle = atan2(targetY - y, targetX - x);
-                PVector target = new PVector(x + cos(angle) * minDist, y + sin(angle) * minDist);
-                float ax = (float) ((target.x - other.getX()));
-                float ay = (float) ((target.y - other.getY()));
-                vel.sub(ax, ay);
-
-                other.setVel(other.getVel().add(ax, ay));*/
-
                 float atrito = (float) 1; //Just to not create a forever loop
                 float angle1 = atan2(vel.y, vel.x);
                 float angle2 = atan2(other.getVel().y, other.getVel().x);
-                float contactAng = atan2(other.getVel().y - vel.y, other.getVel().x - vel.x);
+                float contactAng = atan2(other.getY() - y, other.getX() - x);
 
                 double v1x = (vel.mag() * cos(angle1 - contactAng) * (mass - other.getMass())
                         + (2 * other.getMass()) * other.getVel().mag() * cos(angle2 - contactAng)) / (mass + other.getMass())
@@ -67,7 +59,9 @@ public class Collision {
                 other.getVel().x = (float) v2x * atrito;
 
                 other.getVel().y = (float) v2y * atrito;
-                /*
+
+
+                /*Machado
                 double f1 = mass * vel.mag();
                 double f2 = other.getMass() * other.getVel().mag();
 
